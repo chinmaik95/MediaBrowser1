@@ -1,63 +1,44 @@
 package com.example.mediabrowser;
 
 
-
-import java.util.Random;
-
-import android.app.PendingIntent;
 import android.app.Service;
-import android.appwidget.AppWidgetManager;
-
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.RemoteViews;
+
+import static com.example.mediabrowser.MyWidgetProvider.BUTTTON_TYPE;
 
 public class UpdateWidgetService extends Service {
-    private static final String LOG = "music";
+    private static final String TAG = "music";
 
     @Override
+    public void onCreate() {
+        Log.e(TAG, "onCreate()");
+    }
+
     public void onStart(Intent intent, int startId) {
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this
-                .getApplicationContext());
-
-        int[] allWidgetIds = intent
-                .getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
-
-        for (int widgetId : allWidgetIds) {
-            // create some random data
-            int number = (new Random().nextInt(100));
-
-            RemoteViews remoteViews = new RemoteViews(this
-                    .getApplicationContext().getPackageName(),
-                    R.layout.widget_layout);
-            Log.w("WidgetExample", String.valueOf(number));
-            // Set the text
-            remoteViews.setTextViewText(R.id.update,
-                    "Back" );
-            remoteViews.setTextViewText(R.id.button2,
-                    "Play" );
-            remoteViews.setTextViewText(R.id.button3,
-                    "Next" );
-
-
-            // Register an onClickListener
-            Intent clickIntent = new Intent(this.getApplicationContext(),
-                    MyWidgetProvider.class);
-
-            clickIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-            clickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,
-                    allWidgetIds);
-
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                    getApplicationContext(), 0, clickIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT);
-            //remoteViews.setOnClickPendingIntent(R.id.update, pendingIntent);
-            appWidgetManager.updateAppWidget(widgetId, remoteViews);
-        }
-        stopSelf();
-
+        // TODO Auto-generated method stub
         super.onStart(intent, startId);
+
+        Log.i(TAG, "onStart :");
+
+
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+        if (intent != null) {
+            int buttonType = intent.getIntExtra(BUTTTON_TYPE, 0);
+
+            Log.i(TAG, "buttonType :" + buttonType);
+            if (buttonType == MyWidgetProvider.ACTION_BUTTTON_PLAY) {
+
+            } else if (buttonType == MyWidgetProvider.ACTION_BUTTTON_PAUSE) {
+
+            }
+        }
+        return START_STICKY;
     }
 
     @Override
